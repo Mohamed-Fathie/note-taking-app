@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "948861459344",
+    "project_id": "freecode-mohamed",
+    "storage_bucket": "freecode-mohamed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:948861459344:android:3b70be1b619a018cf97115",
+        "android_client_info": {
+          "package_name": "com.example.freecodecamp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB_uw9cilRIMj0FxgzkSphFzSmwiB5anY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
