@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:freecodecamp/dialog/generics/get_argument.dart';
 import 'package:freecodecamp/dialog/share_empty_note.dart';
+import 'package:freecodecamp/services/Local_storage/CRUD_database.dart';
+import 'package:freecodecamp/services/auth/auth_provider.dart';
+import 'package:freecodecamp/services/auth/firebase_auth_provider.dart';
 import 'package:freecodecamp/services/auth_service.dart';
+import 'package:freecodecamp/services/cloud_storage/CRUD_firebase.dart';
 import 'package:freecodecamp/services/cloud_storage/firebase_notes.dart';
 import 'package:freecodecamp/services/storage_service.dart';
 import 'package:share_plus/share_plus.dart';
@@ -17,14 +21,16 @@ class _CreatOrUpdateNoteState extends State<CreatOrUpdateNote> {
   final String ownerEmail = AuthService.firebase().currentUser!.email;
   CloudNotes? _note;
   // NoteDatabase? _note;
-  //late final FirebaseService _noteservice;
-  late StorageFacade _facade;
-  //late final NoteService _noteservice;
+  late final FirebaseNote _noteservice;
+  late AuthProvifer provider;
+  //late StorageFacade _facade;
+  late final DBnote _notes;
   late TextEditingController _controller;
   @override
   void initState() {
-    _facade = StorageFacade();
+    _noteservice = FirebaseNote();
     _controller = TextEditingController();
+    provider = FirebaseAuthProvider();
     super.initState();
   }
 
@@ -39,8 +45,9 @@ class _CreatOrUpdateNoteState extends State<CreatOrUpdateNote> {
     if (existingNote != null) {
       return existingNote;
     } else {
-      //final owner = await _noteservice.getuser(email: useremail);
-      final creatednote = await _facade.createNote(ownerEmail: ownerEmail);
+      final owner = provider.currentUser!.id;
+
+      final creatednote = await _noteservice.createNote(ownerId: owner);
       _note = creatednote;
       return creatednote;
     }
@@ -49,8 +56,8 @@ class _CreatOrUpdateNoteState extends State<CreatOrUpdateNote> {
   void _deleteNoteIfEmpty() async {
     final note = _note;
     if (_controller.text.isEmpty && note != null) {
-      //_noteservice.deletenote(noteid: note.id);
-      _facade.deletenote(noteId: note.id);
+      _noteservice.deletenote(noteid: note.id);
+      //await _facade.deletenote(noteId: note.id);
     }
   }
 
@@ -60,14 +67,14 @@ class _CreatOrUpdateNoteState extends State<CreatOrUpdateNote> {
       return;
     }
     final text = _controller.text;
-    await _facade.updateNote(noteid: note.id, text: text);
+    await _noteservice.updatenote(noteid: note.id, text: text);
   }
 
   void _savenote() async {
     final note = _note;
     final text = _controller.text;
     if (note != null && text.isNotEmpty) {
-      await _facade.updateNote(noteid: note.id, text: text);
+      await _noteservice.updatenote(noteid: note.id, text: text);
     }
   }
 
@@ -82,7 +89,7 @@ class _CreatOrUpdateNoteState extends State<CreatOrUpdateNote> {
     _savenote();
     _controller.dispose();
     super.dispose();
-    await _facade.synchronizeNotes(ownerEmail: ownerEmail);
+    //await _facade.synchronizeNotes(ownerEmail: ownerEmail);
   }
 
   @override
