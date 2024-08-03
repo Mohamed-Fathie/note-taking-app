@@ -4,7 +4,8 @@ import 'package:freecodecamp/services/auth/bloc/auth_event.dart';
 import 'package:freecodecamp/services/auth/bloc/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(AuthProvifer provider) : super(const Uninitialized()) {
+  AuthBloc(AuthProvifer provider)
+      : super(const Uninitialized(isLoading: true)) {
     on<SendVerification>((event, emit) async {
       await provider.sendvirefiction();
       emit(state);
@@ -15,9 +16,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         await provider.creatUser(email: email, password: password);
         await provider.sendvirefiction();
-        emit(const Needsverificattion());
+        emit(const Needsverificattion(isLoading: false));
       } on Exception catch (e) {
-        emit(RegesterState(e));
+        emit(RegesterState(exception: e, isLoading: false));
       }
     });
 
@@ -27,9 +28,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user == null) {
         emit(LoggedOutState(excpetion: null, isLoading: false));
       } else if (!user.isVerified) {
-        emit(const Needsverificattion());
+        emit(const Needsverificattion(isLoading: false));
       } else {
-        emit(LoggedinState(user));
+        emit(LoggedinState(user: user, isLoading: false));
       }
     });
 
@@ -37,23 +38,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final email = event.email;
       final password = event.password;
       try {
-        emit(LoggedOutState(excpetion: null, isLoading: true));
+        emit(LoggedOutState(
+            excpetion: null,
+            isLoading: true,
+            loadingtext: "wait until I log you in"));
 
         final user = await provider.loggin(
           email: email,
           password: password,
         );
         if (!user.isVerified) {
-          emit(LoggedOutState(excpetion: null, isLoading: true));
-          emit(const Needsverificattion());
+          emit(LoggedOutState(
+            excpetion: null,
+            isLoading: true,
+          ));
+          emit(const Needsverificattion(isLoading: false));
         }
         emit(LoggedOutState(excpetion: null, isLoading: false));
-        emit(LoggedinState(user));
+        emit(LoggedinState(user: user, isLoading: false));
       } on Exception catch (e) {
         emit(LoggedOutState(excpetion: e, isLoading: false));
       }
     });
-    on<ShouldRegister>((event, emit) => emit(const RegesterState(null)));
+    on<ShouldRegister>((event, emit) =>
+        emit(const RegesterState(exception: null, isLoading: false)));
     on<LoggoutEvent>((event, emit) async {
       emit(LoggedOutState(excpetion: null, isLoading: true));
       try {

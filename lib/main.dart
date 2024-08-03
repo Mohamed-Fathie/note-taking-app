@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freecodecamp/helper/loading_screen.dart';
 import 'package:freecodecamp/services/auth/bloc/auth_bloc.dart';
 import 'package:freecodecamp/services/auth/bloc/auth_event.dart';
 import 'package:freecodecamp/services/auth/bloc/auth_state.dart';
@@ -39,7 +40,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     context.read<AuthBloc>().add(const InitializationEvent());
-    return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
+    return BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
+      final LoadingScreen loading = LoadingScreen();
+      if (state.isLoading) {
+        loading.show(text: state.text ?? "loading....", context: context);
+      } else {
+        loading.hide();
+      }
+    }, builder: (context, state) {
       if (state is Needsverificattion) {
         return const VerifyEmail();
       } else if (state is LoggedinState) {

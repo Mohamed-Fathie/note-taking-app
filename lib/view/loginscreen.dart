@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freecodecamp/dialog/errordialog.dart';
 import 'package:freecodecamp/dialog/loading.dart';
+import 'package:freecodecamp/helper/loading_screen.dart';
 import 'package:freecodecamp/services/auth/auth_excption.dart';
 import 'package:freecodecamp/services/auth/bloc/auth_bloc.dart';
 import 'package:freecodecamp/services/auth/bloc/auth_event.dart';
@@ -17,11 +18,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _email;
   late final TextEditingController _pass;
-  Closedialog? _closedialoghandler;
+  LoadingScreen? loading;
   @override
   void initState() {
     _email = TextEditingController();
     _pass = TextEditingController();
+    loading = LoadingScreen();
     super.initState();
   }
 
@@ -37,14 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) async {
         if (state is LoggedOutState && context.mounted) {
-          final closedialog = _closedialoghandler;
-          if (state.isLoading == true && closedialog == null) {
-            _closedialoghandler =
-                loadingdialog(context: context, text: "loading...");
-          } else if (state.isLoading == false && closedialog != null) {
-            closedialog();
-            _closedialoghandler = null;
-          }
           if (state.excpetion is InvalidCredential) {
             await errordialog(context: context, error: 'invalid-email');
           } else if (state.excpetion is WrongPassword) {
