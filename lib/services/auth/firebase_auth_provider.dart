@@ -106,4 +106,21 @@ class FirebaseAuthProvider implements AuthProvifer {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   }
+
+  @override
+  Future<void> restpassword({required String toEmail}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: toEmail);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'user-not-found':
+          throw UserNotFound();
+        case 'invalid-email':
+          throw InvalidEmail();
+
+        default:
+          throw GenericException();
+      }
+    }
+  }
 }

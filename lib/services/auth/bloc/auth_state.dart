@@ -42,3 +42,14 @@ class Needsverificattion extends AuthState {
   const Needsverificattion({required bool isLoading})
       : super(isLoading: isLoading);
 }
+
+class RestPasswordState extends AuthState {
+  final Exception? exception;
+  final bool emailissent;
+
+  RestPasswordState(
+      {required bool isLoading,
+      required this.exception,
+      required this.emailissent})
+      : super(isLoading: isLoading);
+}

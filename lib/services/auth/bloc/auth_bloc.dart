@@ -21,6 +21,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(RegesterState(exception: e, isLoading: false));
       }
     });
+    on<RestPassword>(
+      (event, emit) async {
+        emit(RestPasswordState(
+          isLoading: false,
+          exception: null,
+          emailissent: false,
+        ));
+        final email = event.email;
+        if (email == null) {
+          return;
+        }
+        emit(RestPasswordState(
+          isLoading: true,
+          exception: null,
+          emailissent: false,
+        ));
+        try {
+          await provider.restpassword(toEmail: email);
+          emit(RestPasswordState(
+              isLoading: false, exception: null, emailissent: true));
+        } catch (e) {
+          emit(RestPasswordState(
+              isLoading: false, exception: e as Exception, emailissent: false));
+        }
+      },
+    );
 
     on<InitializationEvent>((event, emit) async {
       await provider.inutualize();

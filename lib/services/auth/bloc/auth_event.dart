@@ -29,3 +29,9 @@ class SendVerification extends AuthEvent {
 class ShouldRegister extends AuthEvent {
   const ShouldRegister();
 }
+
+class RestPassword extends AuthEvent {
+  final String? email;
+
+  RestPassword({required this.email});
+}

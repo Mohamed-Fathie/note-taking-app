@@ -4,6 +4,7 @@ import 'package:freecodecamp/services/auth/bloc/auth_bloc.dart';
 import 'package:freecodecamp/services/auth/bloc/auth_event.dart';
 import 'package:freecodecamp/services/auth/bloc/auth_state.dart';
 import 'package:freecodecamp/services/auth/firebase_auth_provider.dart';
+import 'package:freecodecamp/view/forgot_password_screen.dart';
 import 'package:freecodecamp/view/loginscreen.dart';
 import 'package:freecodecamp/view/note/create_update_note.dart';
 import 'package:freecodecamp/view/note/note_view.dart';
@@ -52,6 +53,8 @@ class _HomePageState extends State<HomePage> {
         return const VerifyEmail();
       } else if (state is LoggedinState) {
         return const NoteView();
+      } else if (state is RestPasswordState) {
+        return const ForgotPassword();
       } else if (state is LoggedOutState) {
         return const LoginScreen();
       } else if (state is RegesterState) {

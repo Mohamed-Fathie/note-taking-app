@@ -13,4 +13,5 @@ abstract class AuthProvifer {
   });
   Future<void> loggout();
   Future<void> sendvirefiction();
+  Future<void> restpassword({required String toEmail});
 }

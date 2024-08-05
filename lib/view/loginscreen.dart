@@ -92,7 +92,12 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () {
                 context.read<AuthBloc>().add(const ShouldRegister());
               },
-              child: const Text("sign up?"))
+              child: const Text("sign up?")),
+          TextButton(
+              onPressed: () {
+                context.read<AuthBloc>().add(RestPassword(email: null));
+              },
+              child: const Text("forget your password?"))
         ]),
       ),
     );

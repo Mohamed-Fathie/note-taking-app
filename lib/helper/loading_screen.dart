@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:freecodecamp/helper/loading_handler.dart';
 
 class LoadingScreen {
@@ -52,9 +51,9 @@ class LoadingScreen {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: 16),
-                      CircularProgressIndicator(),
-                      SizedBox(
+                      const SizedBox(height: 16),
+                      const CircularProgressIndicator(),
+                      const SizedBox(
                         height: 16,
                       ),
                       StreamBuilder(
