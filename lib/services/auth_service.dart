@@ -35,6 +35,6 @@ class AuthService implements AuthProvifer {
   Future<void> inutualize() => provider.inutualize();
 
   @override
-  Future<void> restpassword({required String toEmail}) =>
+  Future<bool> restpassword({required String toEmail}) =>
       provider.restpassword(toEmail: toEmail);
 }

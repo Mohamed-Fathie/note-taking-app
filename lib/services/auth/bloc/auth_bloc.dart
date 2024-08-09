@@ -37,14 +37,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           exception: null,
           emailissent: false,
         ));
+        bool didsend;
+        Exception? exception;
         try {
           await provider.restpassword(toEmail: email);
-          emit(RestPasswordState(
-              isLoading: false, exception: null, emailissent: true));
+
+          didsend = true;
+          exception = null;
         } catch (e) {
-          emit(RestPasswordState(
-              isLoading: false, exception: e as Exception, emailissent: false));
+          didsend = false;
+          exception = e as Exception;
         }
+        emit(RestPasswordState(
+            isLoading: false, exception: exception, emailissent: didsend));
       },
     );
 
